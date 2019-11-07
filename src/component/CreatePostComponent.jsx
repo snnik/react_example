@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PostDataService from '../services/PostDataService';
 
-class PostComponent extends Component {
+class CreatePostComponent extends Component {
     constructor(props){
         super(props);
 
         this.state = {
-            id: this.props.match.params.id,
             headline: '',
             tag: '',
             message: ''
@@ -14,17 +13,6 @@ class PostComponent extends Component {
         this.onSubmit = this.onSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.backClick = this.backClick.bind(this);
-        this.deletePostClicked = this.deletePostClicked.bind(this);
-    }
-
-    componentDidMount(){
-        PostDataService.retrievePost(this.state.id)
-            .then(response => this.setState({
-                id: response.data.id,
-                headline: response.data.headline,
-                tag: response.data.tag,
-                message: response.data.message
-            }));
     }
 
     handleChange(event) {
@@ -36,14 +24,12 @@ class PostComponent extends Component {
 
     onSubmit(event){
         let post = {
-            id: this.state.id,
             headline: this.state.headline,
             tag: this.state.tag,
             message: this.state.message
         }
-        PostDataService.updatePost(this.state.id, post)
-                .then(() => this.props.history.push('/'))
-
+        PostDataService.createPost(post)
+            .then(() => this.props.history.push('/'))
         event.preventDefault();
     }
 
@@ -51,19 +37,7 @@ class PostComponent extends Component {
         this.props.history.push('/');
     }
 
-    deletePostClicked(id) {
-        PostDataService.deletePost(id)
-            .then(
-                response => {
-                    this.setState({ message: `Delete ${id}` });
-                    this.props.history.push('/');
-                }
-            )
-    }
-
     render() {
-        //let { message, tag, headline, id } = this.state;
-        console.log(this.state);
         return (
             <div className="container">
                 <h3>Post</h3>
@@ -90,7 +64,6 @@ class PostComponent extends Component {
                         </div>
                         <div className="row">
                             <button className="btn btn-success mx-2" onClick={this.backClick}>Назад</button>
-                            <button className="btn btn-warning float-right" onClick={() => this.deletePostClicked(this.state.id)}>Удалить</button>
                             <input className="btn btn-primary float-right mx-2" type="submit" value="Сохранить" />
                         </div>
                     </form>
@@ -101,4 +74,5 @@ class PostComponent extends Component {
     }
 }
 
-export default PostComponent;
+
+export default CreatePostComponent;

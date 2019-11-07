@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PostDataService from '../services/PostDataService';
 
 class ListPostsComponent extends Component {
-    
+
     constructor(props) {
         super(props)
         this.state = {
@@ -31,62 +31,46 @@ class ListPostsComponent extends Component {
             )
     }
 
-    deletePostClicked(id){
-        PostDataService.deletePost(id)
-            .then(
-                response => {
-                    this.setState({message: `Delete ${id}`})
-                    this.refreshPosts()
-                }
-            )
-    }
-
-    updatePostClicked(id){
+    updatePostClicked(id) {
         //console.log('update ' + id)
         this.props.history.push(`/post/${id}`);
     }
 
-    addPostClicked(){
+    addPostClicked() {
         //console.log('add ' + id)
-        this.props.history.push(`/post/-1`);
+        this.props.history.push(`/post/create`);
     }
 
     render() {
         return (
             <div className="container">
-                <h3>All Posts</h3>
-                {this.state.message && <div class="alert alert-success">{this.state.message}</div>}
+                <h3>Все посты</h3>
+                {this.state.message && <div className="alert alert-success">{this.state.message}</div>}
                 <div className="container">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Description</th>
-                                <th>Tag</th>
-                                <th>Update</th>
-                                <th>Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                this.state.posts.map(
-                                    post =>
-                                    <tr key={post.id.toString()}>
-                                        <td>{post.id.toString()}</td>
-                                        <td>{post.headline}</td>
-                                        <td>{post.tag}</td>
-                                        <td><button className="btn btn-success" onClick={() => this.updatePostClicked(post.id)}>Update</button></td>
-                                        <td><button className="btn btn-warning" onClick={() => this.deletePostClicked(post.id)}>Delete</button></td>
-                                    </tr>
-                                )
-                            } 
-                        </tbody>
-                    </table>
+                    {
+                        this.state.posts.map(
+                            post =>
+                                <div className="card m-2" key={post.id.toString()} onClick={() => this.updatePostClicked(post.id)}>
+                                    <div className="card-header">
+                                        {post.headline}
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="row"><p>{post.message}</p></div>
+                                        <div className="row">
+
+                                        </div>
+                                    </div>
+                                    <div className="card-footer text-muted">
+                                        {post.tag}
+                                    </div>
+                                </div>
+                        )
+                    }
                     <div className="row">
                         <button className="btn btn-success" onClick={this.addPostClicked}>Add</button>
                     </div>
                 </div>
-                
+
             </div>
         )
     }
